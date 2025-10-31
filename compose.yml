@@ -1,0 +1,42 @@
+services:
+  spring-web-container:
+    container_name: spring-web-container
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - type: bind
+        source: ./src
+        target: /src
+    ports:
+      - "${WEB_HOST_MACHINE_PORT}:8080"
+    tty: true
+    depends_on:
+      - spring-db-container
+    networks:
+      - spring-network
+    command: sleep infinity
+
+  spring-db-container:
+    container_name: spring-db-container
+    image: mysql:8.2.0
+    environment:
+      - "MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}"
+      - "MYSQL_USER=${MYSQL_USER}"
+      - "MYSQL_PASSWORD=${MYSQL_PASSWORD}"
+      - "MYSQL_DATABASE=${MYSQL_DATABASE}"
+      - TZ=Asia/Tokyo
+    volumes:
+      - type: volume
+        source: spring-volume
+        target: /var/lib/mysql
+    ports:
+      - "${DB_HOST_MACHINE_PORT}:3306"
+    networks:
+      - spring-network
+
+networks:
+  spring-network:
+
+volumes:
+  spring-volume:
