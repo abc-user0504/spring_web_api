@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<head lang="ja" xmlns:th="http://www.thymeleaf.org">
+    <meta charset="utf-8">
+    <title>list</title>
+</head>
+<body>
+    <h1>list</h1>
+    <a th:href="@{/}">top page</a>
+    <div>
+        <table>
+            <thead>
+                <tr>
+                    <th>id</th>
+                    <th>summary</th>
+                    <th>status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="task : ${taskList}" th:object="${task}">
+                    <td th:text="*{id}"></td>
+                    <td th:text="*{summary}"></td>
+                    <td th:text="*{status}"></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
