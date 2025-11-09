@@ -3,28 +3,33 @@ package com.example.todo.controller.task;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 
-import java.util.List;
+import com.example.todo.service.task.*;
+
+import lombok.RequiredArgsConstructor;
 
 @Controller
+@RequiredArgsConstructor
 public class TaskController {
     
+    private final TaskService taskService;
+
     @GetMapping("/tasks")
     public String list(Model model) {
-        var task1 = new TaskDTO(
-            1L,
-            "learn Spring Boot",
-            "make TODO application",
-            "TODO"
-        );
-        var task2 = new TaskDTO(
-            2L,
-            "learn Spring Security",
-            "add login function",
-            "TODO"
-        );
-        var taskList = List.of(task1, task2);
+        var taskList = taskService.find()
+            .stream()
+            .map(TaskDTO::toDTO)
+            .toList(); 
         model.addAttribute("taskList", taskList);
         return "tasks/list";
+    }
+
+    @GetMapping("/tasks/{id}")
+    public String showDetail(@PathVariable("id") long taskId, Model model) {
+        var taskEntity = taskService.findById(taskId)
+                            .orElseThrow(() -> new IllegalArgumentException("Task not found: id = " + taskId));
+        model.addAttribute("task", TaskDTO.toDTO(taskEntity));
+        return "tasks/detail";
     }
 }

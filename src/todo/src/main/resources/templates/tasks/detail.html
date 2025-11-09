@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="utf-8">
+        <title>detail</title>
+    </head>
+    <body>
+        <h1>detail</h1>
+        <a th:href="@{/tasks}">list</a>
+        <div th:object="${task}">
+            <h2 th:text="'#' + *{id} + ' ' + *{summary}"></h2>
+            <p th:text="*{status}"></p>
+            <pre th:text="*{description}"></pre>
+        </div>
+    </body>
+</html>
