@@ -2,6 +2,7 @@ package com.example.todo.controller.task;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 
@@ -31,5 +32,17 @@ public class TaskController {
                             .orElseThrow(() -> new IllegalArgumentException("Task not found: id = " + taskId));
         model.addAttribute("task", TaskDTO.toDTO(taskEntity));
         return "tasks/detail";
+    }
+
+    @GetMapping("/tasks/creationForm")
+    public String showCreationForm() {
+        return "tasks/form";
+    }
+
+    @PostMapping("/tasks")
+    public String create(TaskForm form, Model model) {
+        var newEntity = new TaskEntity(null, form.summary(), form.description(), TaskStatus.valueOf(form.status()));
+        taskService.create(newEntity);
+        return list(model);
     }
 }
