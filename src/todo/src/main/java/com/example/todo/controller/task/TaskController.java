@@ -2,8 +2,12 @@ package com.example.todo.controller.task;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import com.example.todo.service.task.*;
@@ -12,11 +16,12 @@ import lombok.RequiredArgsConstructor;
 
 @Controller
 @RequiredArgsConstructor
+@RequestMapping("/tasks")
 public class TaskController {
     
     private final TaskService taskService;
 
-    @GetMapping("/tasks")
+    @GetMapping
     public String list(Model model) {
         var taskList = taskService.find()
             .stream()
@@ -26,7 +31,7 @@ public class TaskController {
         return "tasks/list";
     }
 
-    @GetMapping("/tasks/{id}")
+    @GetMapping("/{id}")
     public String showDetail(@PathVariable("id") long taskId, Model model) {
         var taskEntity = taskService.findById(taskId)
                             .orElseThrow(() -> new IllegalArgumentException("Task not found: id = " + taskId));
@@ -34,15 +39,17 @@ public class TaskController {
         return "tasks/detail";
     }
 
-    @GetMapping("/tasks/creationForm")
-    public String showCreationForm() {
+    @GetMapping("/creationForm")
+    public String showCreationForm(@ModelAttribute TaskForm form) {
         return "tasks/form";
     }
 
-    @PostMapping("/tasks")
-    public String create(TaskForm form, Model model) {
-        var newEntity = new TaskEntity(null, form.summary(), form.description(), TaskStatus.valueOf(form.status()));
-        taskService.create(newEntity);
-        return list(model);
+    @PostMapping
+    public String create(@Validated TaskForm form, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return showCreationForm(form);
+        } 
+        taskService.create(form.toEntity());
+        return "redirect:/tasks";
     }
 }
