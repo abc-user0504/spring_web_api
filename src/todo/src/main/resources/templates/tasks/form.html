@@ -5,12 +5,15 @@
         layout:decorate="~{layout/layout}"
 >
 <head>
-    <title>create tasks</title>
+    <title th:text="${mode == 'CREATE'} ? 'create task': 'edit task'">create tasks</title>
 </head>
 <body>
     <section layout:fragment="content">
         <div>
-            <form th:action="@{/tasks}" method="post" th:object="${taskForm}">
+            <form th:action="${mode == 'CREATE'} ? @{/tasks} : @{/tasks/{id}(id=${id})}"
+                th:method="${mode == 'CREATE'} ? post : put"
+                th:object="${taskForm}"
+            >
                 <div class="form-group mt-3">
                     <label for="summaryInput" class="form-label">summary</label>
                     <input type="text" id="summaryInput" th:field="*{summary}" class="form-control" th:errorclass="is-invalid">
@@ -31,8 +34,8 @@
                     <span th:errors="*{status}" class="invalid-feedback"></span>
                 </div>
                 <div class="mt-3">
-                    <button type="submit" class="btn btn-primary">create</button>
-                    <a th:href="@{/tasks}" class="btn btn-secondary">back</a>
+                    <button type="submit" class="btn btn-primary" th:text="${mode == 'CREATE'} ? 'create' : 'edit'">create</button>
+                    <a th:href="${mode == 'CREATE'} ? @{/tasks} : @{/tasks/{id}(id=${id})}" class="btn btn-secondary">back</a>
                 </div>
             </form>
         </div>

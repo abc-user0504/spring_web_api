@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import jakarta.validation.constraints.Pattern;
 
+
 public record TaskForm(
 
     @NotBlank
@@ -18,7 +19,19 @@ public record TaskForm(
     @Pattern(regexp="TODO|DOING|DONE", message = "you need to enter in ('TODO', 'DOING', 'DONE')")
     String status
 ) {
+   public static TaskForm fromEntity(TaskEntity taskEntity) {
+        return new TaskForm(
+            taskEntity.summary(),
+            taskEntity.description(),
+            taskEntity.status().name()
+        );
+   } 
+
    public TaskEntity toEntity() {
         return new TaskEntity(null, summary(), description(), TaskStatus.valueOf(status()));
-   } 
+   }
+
+   public TaskEntity toEntity(long id) {
+        return new TaskEntity(id, summary(), description(), TaskStatus.valueOf(status()));
+   }
 }
