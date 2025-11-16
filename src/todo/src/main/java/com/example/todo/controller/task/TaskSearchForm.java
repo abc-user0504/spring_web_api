@@ -1,0 +1,22 @@
+package com.example.todo.controller.task;
+
+import java.util.List;
+import java.util.Optional;
+
+import com.example.todo.service.task.*;
+
+public record TaskSearchForm(
+    String summary,
+    List<String> status
+) {
+    public TaskSearchEntity toEntity() {
+        var statusEntityList = Optional.ofNullable(status())
+            .map(statusList -> statusList.stream().map(TaskStatus::valueOf).toList())
+            .orElse(List.of());
+        return new TaskSearchEntity(summary(), statusEntityList);
+    } 
+
+    public TaskSearchDTO toDTO() {
+        return new TaskSearchDTO(summary(), status());
+    }
+}

@@ -14,8 +14,17 @@ import java.util.Optional;
 @Mapper
 public interface TaskRepository {
     
-    @Select("SELECT id, summary, description, status FROM tasks;")
-    List<TaskEntity> select();
+    @Select("""
+            SELECT id, summary, description, status
+            FROM tasks
+            WHERE summary LIKE CONCAT('%', #{condition.summary}, '%')
+            AND status IN (
+                    <foreach item='item' index='index' collection='condition.status' separator=','>
+                        #{item}
+                    </foreach>
+                )
+            """)
+    List<TaskEntity> select(@Param("condition") TaskSearchEntity condition);
 
     @Select("SELECT id, summary, description, status FROM tasks WHERE id = #{taskId}")
     Optional<TaskEntity> selectById(@Param("taskId") long taskId);
