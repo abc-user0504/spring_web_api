@@ -1,0 +1,2 @@
+INSERT INTO tasks (summary, description, status) VALUES ('make pipelines', 'make some pipelines for app team', 'TODO');
+INSERT INTO tasks (summary, description, status) VALUES ('make feed', 'make some feeds for infra team', 'DOING');
