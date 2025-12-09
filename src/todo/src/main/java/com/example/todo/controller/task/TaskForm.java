@@ -1,0 +1,22 @@
+package com.example.todo.controller.task;
+
+import com.example.todo.service.task.TaskEntity;
+import com.example.todo.service.task.TaskStatus;
+
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
+
+public record TaskForm(
+    @NotBlank
+    @Size(max = 256, message = "please enter less than 256 words")
+    String summary,
+    String description,
+    @NotBlank
+    @Pattern(regexp = "TODO|DOING|DONE", message = "only allowed 'TODO', 'DOING', 'DONE'")
+    String status
+) {
+    public TaskEntity toEntity() {
+        return new TaskEntity(null, summary(), description(), TaskStatus.valueOf(status()));
+    }
+}
