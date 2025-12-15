@@ -7,6 +7,9 @@
     <body>
         <h1>detail</h1>
         <a th:href="@{/tasks}">list</a>
+        <div>
+            <a th:href="@{/tasks/{id}/editForm(id=${id})}">edit</a>
+        </div>
         <div th:object="${task}">
             <h2 th:text="'#' + *{id} + ' ' + *{summary}"></h2>
             <pre th:text="*{description}"></pre>
