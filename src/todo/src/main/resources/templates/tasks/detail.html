@@ -10,6 +10,13 @@
         <div>
             <a th:href="@{/tasks/{id}/editForm(id=${id})}">edit</a>
         </div>
+        <form
+            th:action="@{/tasks/{id}(id=${id})}"
+            th:method="delete"
+            onclick="return confirm('you sure to delete?')"
+        >
+            <button type="submit">delete</button>
+        </form>
         <div th:object="${task}">
             <h2 th:text="'#' + *{id} + ' ' + *{summary}"></h2>
             <pre th:text="*{description}"></pre>
