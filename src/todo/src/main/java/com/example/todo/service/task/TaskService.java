@@ -1,0 +1,25 @@
+package com.example.todo.service.task;
+
+import com.example.todo.repository.TaskRepository;
+
+import lombok.RequiredArgsConstructor;
+
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.stereotype.Service;
+
+@Service
+@RequiredArgsConstructor
+public class TaskService {
+    
+    private final TaskRepository taskRepository;
+
+    public List<TaskEntity> find() {
+        return taskRepository.select();
+    }
+
+    public Optional<TaskEntity> findById(long taskId) {
+        return taskRepository.selectById(taskId);
+    }
+}
