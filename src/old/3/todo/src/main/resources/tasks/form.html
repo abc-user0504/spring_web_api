@@ -2,11 +2,13 @@
 <html xmlns:th="http://www.thymeleaf.org">
     <head>
         <meta charset="utf-8">
-        <title>form</title>
+        <title th:text="${mode == 'CREATE'} ? 'create' : 'edit'"></title>
     </head>
     <body>
         <div>
-            <form th:action="@{/tasks}" method="post" th:object="${taskForm}">
+            <form th:action="${mode == 'CREATE'} ? @{/tasks} : @{/tasks/{id}(id=${id})}"
+                  th:method="${mode == 'CREATE'} ? post : put"
+                  th:object="${taskForm}">
                 <div>
                     <label for="summaryInput">summary</label>
                     <input type="text" id="summaryInput" th:field="*{summary}">
@@ -27,8 +29,8 @@
                     <span th:errors="*{status}"></span>
                 </div>
                 <div>
-                    <button type="submit">create</button>
-                    <a th:href="@{/tasks}">cancel</a>
+                    <button type="submit" th:text="${mode == 'CREATE'} ? 'create' : 'edit'"></button>
+                    <a th:href="${mode == 'CREATE'} ? @{/tasks} : @{/tasks/{id}(id=${id})}">back</a>
                 </div>
             </form>
         </div>

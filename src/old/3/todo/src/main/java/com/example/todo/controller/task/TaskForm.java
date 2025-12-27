@@ -20,4 +20,12 @@ public record TaskForm(
     public TaskEntity toEntity() {
         return new TaskEntity(null, summary(), description(), TaskStatus.valueOf(status()));
     }
+
+    public TaskEntity toEntity(long id) {
+        return new TaskEntity(id, summary(), description(), TaskStatus.valueOf(status()));
+    }
+
+    public static TaskForm fromEntity(TaskEntity taskEntity) {
+        return new TaskForm(taskEntity.summary(), taskEntity.description(), taskEntity.status().name());
+    }
 }
